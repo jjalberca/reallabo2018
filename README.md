@@ -34,7 +34,7 @@ Necesitamos el compilador `arm-none-eabi-gcc`, podemos descargar los binarios de
 
 ```sh
 tar -xjvf gcc-arm-none-eabi-*-linux.tar.bz2
-sudo cp sudo mv gcc-arm-none-eabi-*-major /opt/gcc-arm-none-eabi
+sudo cp gcc-arm-none-eabi-*-major /opt/gcc-arm-none-eabi
 rm -rf gcc-arm-none-eabi*
 ```
 
