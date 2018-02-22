@@ -27,6 +27,8 @@ Relación entre pines del micro y de la placa:
 
 PWM en punto 38
 
+[Documentacion ASF](http://asf.atmel.com/docs/latest/)
+
 ## Build
 ### Prerequisites
 
