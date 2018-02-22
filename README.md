@@ -2,9 +2,9 @@
 
 ## Pinout
 
--**IN_ 1** está en pin 4
--**IN_2** está en pin 5
--**Enable** en pin 2
+- **IN_ 1** está en pin 4
+- **IN_2** está en pin 5
+- **Enable** en pin 2
 
 | Enable    | IN\_1  | IN\_2  | Sentido      |
 | ----------|:------:| ------:|-------------:|
@@ -28,7 +28,8 @@ Relación entre pines del micro y de la placa:
 PWM en punto 38
 
 [Documentacion ASF](http://asf.atmel.com/docs/latest/)
-[Documentacion ASF - PWM](http://asf.atmel.com/docs/3.20.1/sam3s/html/sam_pwm_quickstart.html)
+
+[Documentacion ASF - PWM](http://asf.atmel.com/docs/latest/sam3x/html/sam_pwm_quickstart.html)
 
 ## Build
 ### Prerequisites
