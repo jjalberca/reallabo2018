@@ -19,7 +19,7 @@ Cables amarillo y blanco del motor son para el encoder (interrupciones)
 
 Relación entre pines del micro y de la placa:
 - [Arduino oficial PinMapping SAM3X](https://www.arduino.cc/en/Hacking/PinMappingSAM3X)
-- [Arduinooficial Schematic](https://www.arduino.cc/en/uploads/Main/arduino-Due-schematic.pdf)
+- [Arduino oficial Schematic](https://www.arduino.cc/en/uploads/Main/arduino-Due-schematic.pdf)
 - [*The Unofficial Arduino Due Pinout Diagram*](http://www.robgray.com/temp/Due-pinout.svg)
 
 ## DOC
@@ -42,9 +42,9 @@ sudo cp gcc-arm-none-eabi-*-major /opt/gcc-arm-none-eabi
 rm -rf gcc-arm-none-eabi*
 ```
 
-Necesitamos *BOSSA* para poder subir los binarios compilados al microprocesador. Lo podemos instalar desde la fuente en su [GitHub](https://github.com/shumatech/BOSSA) o en ubuntu con `apt install bossa-cli`.
+Necesitamos *BOSSA* para poder subir los binarios compilados al microprocesador. Lo podemos instalar desde la fuente en su [GitHub](https://github.com/shumatech/BOSSA) o en Ubuntu con `apt install bossa-cli`.
 
-En la carpeta hardware están las librerías de Atmel para el microprocesador, sacadas de  [página oficial][ATMEL ASF] y del paquete del IDE de Arduino para DUE.
+Necesitamos el framework de ATMEL que debemos descargar desde [ATMEL ASF] y descomprimirlo en algún lugar del ordenador que debe ser indicado al Makefile mediante una variable de entorno (`make ASF_PATH=/path/to/asf/root`)o modificando su configuración (Actualmente está configurado para que la carpeta de ASF esté dentro del repositorio).
 
 **Es posible que falte alguna dependencia**
 
@@ -53,12 +53,14 @@ En la carpeta hardware están las librerías de Atmel para el microprocesador, s
 ### Makefile
 El makefile tiene todo lo necesario para compilar binarios de *C* y *C++* y subirlos a la placa mediante bossa.
 
-Los ficheros fuentes deben estar en `src` y las cabeceras en `include`. El archivo `due_sam3x.init.c` contiene la rutina de inicialización que puede ser modificada para cambiar el comportamiento.
+Los ficheros fuentes deben estar en `src` y las cabeceras en `include`. Son necesarios unos archivos de inicialización de la placa que deben estár en `include`.
+
+Para añadir drivers y funciones del framework es necesario modificar el archivo `config.mk` y añadir tanto las cabeceras como las fuentes a las variables `ASF_INC` y `ASF_SRC`.
 
 Para compilar:
 ```sh
 make
-make install
+make flash
 ```
 
-A veces es necesario pulsar el botón *erase* de la placa antes de ejecutar `make install` para que funcione correctamente. Se puede cambiar el puerto serie al que está conectado la placa con `make install UPLOAD_PORT=ttyACM0`.
+A veces es necesario pulsar el botón *erase* de la placa antes de ejecutar `make flash` para que funcione correctamente. Se puede cambiar el puerto serie al que está conectado la placa con `make install UPLOAD_PORT=ttyACM0`.
