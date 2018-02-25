@@ -39,6 +39,7 @@ ASF_INC = \
 	sam/drivers/pwm                        \
 	sam/drivers/uart                       \
 	sam/drivers/usart                      \
+	sam/drivers/tc                         \
 	sam/utils                              \
 	sam/utils/cmsis/sam3x/include          \
 	sam/utils/cmsis/sam3x/source/templates \
@@ -64,6 +65,7 @@ ASF_SRC = \
 	sam/drivers/pwm/pwm.c                                      \
 	sam/drivers/uart/uart.c                                    \
 	sam/drivers/usart/usart.c                                  \
+	sam/drivers/tc/tc.c                                        \
 	sam/utils/cmsis/sam3x/source/templates/exceptions.c        \
 	sam/utils/cmsis/sam3x/source/templates/gcc/startup_sam3x.c \
 	sam/utils/cmsis/sam3x/source/templates/system_sam3x.c      \

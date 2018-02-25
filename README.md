@@ -31,6 +31,8 @@ PWM en punto 38
 
 [Documentacion ASF - PWM](http://asf.atmel.com/docs/latest/sam3x/html/sam_pwm_quickstart.html)
 
+Definiciones de constantes y flags están en `sdk-asf-3.37/sam/utils/cmsis/sam3x/include/component`.
+
 ## Build
 ### Prerequisites
 

@@ -1,13 +1,15 @@
-#include "asf.h"
+#include "main.h"
 #include "stdio_serial.h"
+#include "conf_uart_serial.h"
 #include "conf_board.h"
 #include "conf_clock.h"
-#include <delay.h>
 
-#define STRING_EOL    "\r"
-#define STRING_HEADER "-- Blink LED Example --\r\n" \
-		"-- "BOARD_NAME" --\r\n" \
-		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
+volatile uint32_t sys_ticks = 0;
+
+void SysTick_Handler(void)
+{
+	sys_ticks++;
+}
 
 static void configure_console(void)
 {
@@ -27,11 +29,8 @@ static void configure_console(void)
 	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 
-/**
- * Application entry point
- */
-int main(void)
-{
+void due_init(void){
+
 	/* Initialize the SAM system */
 	sysclk_init();
 	board_init();
@@ -39,19 +38,9 @@ int main(void)
 	/* Configure the console uart for debug information */
 	configure_console();
 
-	/* Output example information */
-	puts(STRING_HEADER);
-
-	/* Enable PWM peripheral clock */
-
-	pmc_enable_periph_clk(ID_PIOB);
-	pio_set_output(PIOB, PIO_PB27, LOW, DISABLE, ENABLE);
-
-	/* Infinite loop */
-	while (1) {
-		delay_ms(500);
-		pio_clear(PIOB, PIO_PB27);
-		delay_ms(500);
-		pio_set(PIOB, PIO_PB27);
+	if (SysTick_Config(84000000U / 1000U)) {
+		puts("-F- Systick configuration error\r");
+		while (1);
 	}
+
 }
