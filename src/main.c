@@ -63,15 +63,15 @@ void TC0_Handler(void) {
 	uint32_t tc_status = tc_get_status(TC0, 0);
 	if (tc_status & TC_SR_CPAS)
 	{
-		printf("AA: %lu\n", sys_ticks);
+		printf("AA: %lu\r\n", sys_ticks);
 	}
 	if (tc_status & TC_SR_CPBS)
 	{
-		printf("BB: %lu\n", sys_ticks);
+		printf("BB: %lu\r\n", sys_ticks);
 	}
 	if (tc_status & TC_SR_CPCS)
 	{
-		printf("CC: %lu\n", sys_ticks);
+		printf("CC: %lu\r\n", sys_ticks);
 		pio_toggle_pin(PIO_PB27_IDX);
 	}
 	if (tc_status & TC_SR_COVFS)
@@ -79,7 +79,6 @@ void TC0_Handler(void) {
 		// Nunca se llega aqui:
 		// No está activada la interrupción de overflow
 		// No puede llegar a hacer overflow porque se reinicia en RC
-		printf("AA: %lu\n", sys_ticks);
 	}
 }
 

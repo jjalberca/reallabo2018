@@ -2,7 +2,7 @@
 # Related directories and files
 #-------------------------------------------------------------------------------
 ASF_PATH       ?= xdk-asf-3.37
-CROSS          ?= arm-none-eabi-
+CROSS          ?= /opt/gcc-arm-none-eabi/bin/arm-none-eabi-
 UPLOAD_PORT    ?= ttyACM0
 TARGET         ?= firmware
 
