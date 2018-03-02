@@ -2,6 +2,7 @@
 #include "main.h"
 #include "stdio_serial.h"
 #include <delay.h>
+#include "pwm_driver.h"
 
 
 
@@ -61,22 +62,6 @@ static void tc_config (void){
 	NVIC_EnableIRQ(TC_IRQ);
 }
 
-static void tc_pwm_config(void){
-	pmc_enable_periph_clk(ID_TC0);
-	tc_init(TC_PWM, TC_PWM_CH, 0 |
-		TC_CMR_WAVE       |
-		TC_CMR_ACPA_SET   |
-		TC_CMR_ACPC_CLEAR |
-		TC_CMR_CPCTRG);
-
-
-	// Mete valores en los registros de comparación
-	tc_write_rc(TC_PWM,TC_PWM_CH,42000U);
-	tc_write_ra(TC_PWM,TC_PWM_CH,10500U);
-	tc_start(TC_PWM,TC_PWM_CH);
-
-
-}
 
 // Rutina de atención a la interrupción
 void TC1_Handler(void) {
@@ -105,28 +90,7 @@ void TC1_Handler(void) {
 
 	printf("FF: %lu\r\n", sys_ticks);
 }
-/*
-static void pwm_config(void){
-	pwm_channel_t pwm_channel_instance;
-	pmc_enable_periph_clk(ID_PWM);
-	pwm_channel_disable(PWM, PWM_CHANNEL_0);
-	pwm_clock_t clock_setting = {
-	    .ul_clka = 1000 * 200,
-	    .ul_clkb = 0,
-	    .ul_mck = sysclk_get_cpu_hz()
-	};
-	pwm_init(PWM, &clock_setting);
-		pwm_channel_instance.alignment = PWM_ALIGN_LEFT;
-		pwm_channel_instance.polarity = PWM_HIGH;
-		pwm_channel_instance.ul_prescaler = PWM_CMR_CPRE_CLKA;
-		pwm_channel_instance.ul_period = 200;
-		pwm_channel_instance.ul_duty = 50;
-		pwm_channel_instance.channel = PWM_CHANNEL_0;
-	pwm_channel_init(PWM, &pwm_channel_instance);
 
-	pwm_channel_enable(PWM, PWM_CHANNEL_0);
-}
-*/
 
 /**
  * Application entry point
@@ -167,12 +131,16 @@ int main(void) {
 
 	// Rutina de configuración del timer
 	tc_config();
-	tc_pwm_config();
+	tc_pwm_init(5000);
 
-	//pwm_config();
+	unsigned int dc = 0;
+
 
 	// Infinite loop
 	while (1) {
+		if(dc > 1000) dc = 0;
+		tc_pwm_duty(dc++);
+		delay_ms(10);
 
 	}
 }
