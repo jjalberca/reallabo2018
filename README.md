@@ -66,3 +66,6 @@ make flash
 ```
 
 A veces es necesario pulsar el botón *erase* de la placa antes de ejecutar `make flash` para que funcione correctamente. Se puede cambiar el puerto serie al que está conectado la placa con `make install UPLOAD_PORT=ttyACM0`.
+
+## Aclaración de los Timers Counters.
+En el la sección Timer Counter del datasheet hay que tener en cuenta lo siguiente para no equivocarnos. Tenemos 2 Timer Counters (TC) y cada uno de ellos tiene a su vez 3 Channels que también se llaman TC. La numeración de estos puede resultar poco clara debido a esta nomenclatura. Para aclararlo, en caso de duda, mirar la página 31 del datasheet.
