@@ -23,15 +23,15 @@ Relación entre pines del micro y de la placa:
 - [*The Unofficial Arduino Due Pinout Diagram*](http://www.robgray.com/temp/Due-pinout.svg)
 
 ## DOC
-[Atmel SAM3X8E Datasheet](http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-11057-32-bit-Cortex-M3-Microcontroller-SAM3X-SAM3A_Datasheet.pdf)
-
-PWM en punto 38
+[Atmel SAM3X8E Datasheet][SAM3X/A Datasheet]
 
 [Documentacion ASF](http://asf.atmel.com/docs/latest/)
 
 [Documentacion ASF - PWM](http://asf.atmel.com/docs/latest/sam3x/html/sam_pwm_quickstart.html)
 
 Definiciones de constantes y flags están en `sdk-asf-3.37/sam/utils/cmsis/sam3x/include/component`.
+
+[SAM3X/A Datasheet]: http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-11057-32-bit-Cortex-M3-Microcontroller-SAM3X-SAM3A_Datasheet.pdf
 
 ## Build
 ### Prerequisites
@@ -67,5 +67,17 @@ make flash
 
 A veces es necesario pulsar el botón *erase* de la placa antes de ejecutar `make flash` para que funcione correctamente. Se puede cambiar el puerto serie al que está conectado la placa con `make install UPLOAD_PORT=ttyACM0`.
 
-## Aclaración de los Timers Counters.
-En el la sección Timer Counter del datasheet hay que tener en cuenta lo siguiente para no equivocarnos. Tenemos 2 Timer Counters (TC) y cada uno de ellos tiene a su vez 3 Channels que también se llaman TC. La numeración de estos puede resultar poco clara debido a esta nomenclatura. Para aclararlo, en caso de duda, mirar la página 31 del datasheet.
+## Timers Counters.
+Tanto para las interrupciones periódicas que necesitemos como para generar el PWM del motor se usarán los TC del SAM3X8E.
+Tenemos 3 *timers* con 3 canales cada uno y cada uno de los canales con dos salidas PWM. También existe un periférico de PWM pero ninguna de las salidas con las que cuenta coincide con los pines que necesitamos.
+
+### Aclaración de la nomenclatura de NVIC.
+Para las funciones del **Driver TC** existen únicamente tres *timers* (TC0, TC1 y TC2) y se elige el canal al que nos estamos refiriendo mediante un parametro de las funciones. Sin embargo para el **PCM** y el **NVIC** existen 9 *timers* independientes (TC[0-8]), uno por cada canal.
+
+Estas dos nomenclaturas se pueden ver en el apartado 7.1 (pág. 31) del [SAM3X/A Datasheet]
+
+### Quadrature decoder
+El SAM3XE8 contiene un decodificador de las señales del encoder del motor en hardware, que permite controlar su posición y/o su velocidad sin ningún software adicional, usando los canales 0, 1 y 2 del TC0 para este propósito. Sin embargo, no es facil de integrar en este proyecto, ya que necesariamente las entradas a este decodificador deben ser TIOA0 y TIOB0.
+TIOA0 coincide con la entrada de *Enable_1* del puente H, por lo que habría que modificar la *"shield"* del puente H.
+
+La documentación está en el apartado 36.6.14 (pág. 871) del [SAM3X/A Datasheet]
