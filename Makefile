@@ -56,10 +56,10 @@ CFLAGS    += -Wpointer-arith
 CXXFLAGS  += -Wpointer-arith
 
 # Preprocessor flags.
-CPPFLAGS  += $(foreach INC,$(addprefix $(ASF_PATH)/,$(ASF_INC)),-I$(INC))
-CPPFLAGS  += -I$(INCLUDE_DIR)
-ASFLAGS   += $(foreach INC,$(addprefix $(ASF_PATH)/,$(ASF_INC)),'-Wa,-I$(INC)')
-ASFLAGS   += '-Wa, -I$(INCLUDE_DIR)'
+INCLUDES  += $(foreach INC,$(addprefix $(ASF_PATH)/,$(ASF_INC)),-I$(INC))
+INCLUDES  += -I$(INCLUDE_DIR)
+CPPFLAGS  += $(INCLUDES)
+ASFLAGS   += $(foreach INC, $(INCLUDES),'-Wa,$(INC)')
 
 # CPU specific flags.
 CPUFLAGS  += -mcpu=$(ARCH) -mthumb -D=__$(PART)__
@@ -172,15 +172,16 @@ DEP_FILES := $(wildcard $(DEP) $(ASF_DEP))
 
 # Default target.
 .PHONY: all
-all: binary
+all: autocomplete binary
 
 .PHONY: binary
 binary: $(OUTPUT_DIR)/$(TARGET).bin
 
 .PHONY: clean
 clean:
-	$(ECHO) "Cleaning: $(RM) $(OUTPUT_DIR)"
+	$(ECHO) "Cleaning: $(OUTPUT_DIR)"
 	$(RM) $(OUTPUT_DIR)
+	$(RM) .clang_complete
 
 
 # Create object files from C source files.
@@ -246,3 +247,12 @@ flash: binary
 	-@sleep 1
 	$(ECHO) "Uploading ..."
 	$(BOSSA) --port=$(UPLOAD_PORT) $(BOSSA_FLAGS) $(OUTPUT_DIR)/$(TARGET).bin -R
+
+#-------------------------------------------------------------------------------
+# Autocomplete
+#-------------------------------------------------------------------------------
+.PHONY: autocomplete
+autocomplete: .clang_complete
+.clang_complete:
+	$(ECHO) "Generating $@"
+	$(ECHO) $(INCLUDES) | sed -E -e 's/[[:blank:]]+/\n/g' > .clang_complete
