@@ -70,14 +70,16 @@ int main(void) {
 
 
 
-	unsigned int dc = 0;
-	int s = 1;
+	int dc = 0;
+	int s = 10;
+	int u = 1;
 
 	// Infinite loop
 	while (1) {
-		if(dc == 100) s = -1;
-		else if(dc == 0) s = 1;
-		tc_pwm_duty(10*(dc+=s));
+		if(dc >= 1000) u = -1;
+		else if(dc <= 0) u = 1;
+		dc+=s*u;
+		tc_pwm_duty(dc);
 		delay_ms(15);
 	}
 }

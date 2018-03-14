@@ -4,7 +4,7 @@
 
 
 void tc_pwm_init(unsigned int frec);
-void tc_pwm_duty(unsigned int dc);
+void tc_pwm_duty(int dc);
 
 
 

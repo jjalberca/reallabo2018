@@ -26,8 +26,10 @@ void tc_pwm_init(unsigned int frec){
 	tc_start(TC_PWM,TC_PWM_CH);
 }
 
-void tc_pwm_duty(unsigned int dc){
+void tc_pwm_duty(int dc){
+	if(dc < 0) dc = 0;
+	if(dc > 1000) dc = 1000;
 	unsigned int rc = tc_read_rc(TC_PWM,TC_PWM_CH);
-	unsigned int ra = (rc*dc)/1000;
-	tc_write_ra(TC_PWM,TC_PWM_CH,ra);
+	unsigned int ra = rc - (rc*dc)/1000;
+	tc_write_ra(TC_PWM,TC_PWM_CH,ra+1);
 }
