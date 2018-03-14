@@ -11,23 +11,23 @@
 
 void tc_pwm_init(unsigned int frec){
 
-  pmc_enable_periph_clk(TC_PWM_PCM);
-  tc_init(TC_PWM, TC_PWM_CH, 0 |
-    TC_CMR_WAVE       |
-    TC_CMR_ACPA_SET   |
-    TC_CMR_ACPC_CLEAR |
-    TC_CMR_CPCTRG);
+	pmc_enable_periph_clk(TC_PWM_PCM);
+	tc_init(TC_PWM, TC_PWM_CH, 0 |
+	TC_CMR_WAVE       |
+	TC_CMR_ACPA_SET   |
+	TC_CMR_ACPC_CLEAR |
+	TC_CMR_CPCTRG);
 
 
   unsigned int rc = FREC_MCK/2/frec;
 
-  tc_write_rc(TC_PWM,TC_PWM_CH,rc);
-  tc_write_ra(TC_PWM,TC_PWM_CH,rc+1);
-  tc_start(TC_PWM,TC_PWM_CH);
+	tc_write_rc(TC_PWM,TC_PWM_CH,rc);
+	tc_write_ra(TC_PWM,TC_PWM_CH,rc+1);
+	tc_start(TC_PWM,TC_PWM_CH);
 }
 
 void tc_pwm_duty(unsigned int dc){
-  unsigned int rc = tc_read_rc(TC_PWM,TC_PWM_CH);
-  unsigned int ra = (rc*dc)/1000;
-  tc_write_ra(TC_PWM,TC_PWM_CH,ra);
+	unsigned int rc = tc_read_rc(TC_PWM,TC_PWM_CH);
+	unsigned int ra = (rc*dc)/1000;
+	tc_write_ra(TC_PWM,TC_PWM_CH,ra);
 }
