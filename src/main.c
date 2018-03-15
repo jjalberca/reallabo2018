@@ -4,6 +4,7 @@
 #include <delay.h>
 #include "pwm_driver.h"
 #include "periodic_tc.h"
+#include "encoder.h"
 
 
 
@@ -25,9 +26,6 @@ PTC_ISR {
 	}
 }
 
-static void pin_edge_handler(const uint32_t id, const uint32_t index){
-	printf("Interrupt: %lu\r\n", sys_ticks);
-}
 
 /**
  * Application entry point
@@ -38,7 +36,6 @@ int main(void) {
 
 	ioport_init();
 
-
 	// Imprime el mensaje de inicio
 	puts(STRING_HEADER);
 
@@ -46,19 +43,6 @@ int main(void) {
 	pmc_enable_periph_clk(ID_PIOB);
 	// Establece el pin 27 como salida
 	pio_set_output(PIOB, PIO_PB27, LOW, DISABLE, ENABLE);
-
-
-	// Configuración de las interrupción
-	NVIC_DisableIRQ(PIOB_IRQn);
-	NVIC_ClearPendingIRQ(PIOB_IRQn);
-	NVIC_SetPriority(PIOB_IRQn, 9);
-	pmc_enable_periph_clk(ID_PIOB);
-	pio_set_input(PIOB, PIO_PB17, PIO_PULLUP);
-	pio_handler_set(PIOB, ID_PIOB, PIO_PB17, PIO_IT_EDGE, pin_edge_handler);
-	pio_enable_interrupt(PIOB, PIO_PB17);
-	NVIC_EnableIRQ(PIOB_IRQn);
-
-
 	// Rutina de configuración del timer
 	periodic_init();
 	// El pin de salida del pwm
@@ -68,7 +52,7 @@ int main(void) {
 
 	tc_pwm_init(5000);
 
-
+	encoder_init();
 
 	int dc = 0;
 	int s = 10;
