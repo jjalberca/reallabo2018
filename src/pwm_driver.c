@@ -2,9 +2,9 @@
 #include "asf.h"
 
 
-#define TC_PWM TC0
+#define TC_PWM TC2
 #define TC_PWM_CH 0
-#define TC_PWM_PCM ID_TC0
+#define TC_PWM_PCM ID_TC6
 #define FREC_MCK 84000000U
 
 #define PWM_PIN PIO_PB25_IDX
