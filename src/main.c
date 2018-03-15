@@ -23,6 +23,7 @@ PTC_ISR {
 	uint32_t tc_status = tc_get_status(PTC_INT, PTC_INT_CH);
 	if (tc_status & TC_SR_CPCS){
 		printf("CC: %lu\r\n", sys_ticks);
+		printf("Pasos: %d\r\n", encoder_getpos());
 		pio_toggle_pin(PIO_PB27_IDX);
 	}
 }
@@ -50,17 +51,22 @@ int main(void) {
 	encoder_init();
 
 	motor_init();
-
+/*
 	int dc = 0;
 	int s = 5;
 	int u = 1;
+	*/
 
 	// Infinite loop
 	while (1) {
+		/*
 		if(dc >= 1000) u = -1;
 		else if(dc <= -1000) u = 1;
 		dc+=s*u;
 		motor_set(dc);
 		delay_ms(15);
+		*/
+
+		encoder_fire();
 	}
 }

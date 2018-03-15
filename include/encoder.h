@@ -14,7 +14,7 @@
 
 void encoder_init(void);
 int encoder_getpos(void);
-int encoder_clean(void);
+int encoder_clear(void);
 void encoder_fire(void);
 
 #endif

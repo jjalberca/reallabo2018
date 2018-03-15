@@ -1,17 +1,82 @@
 #include "encoder.h"
 #include "stdio_serial.h"
 #include "asf.h"
+#include "fsm.h"
 
 
 static void enc_isr(const uint32_t id, const uint32_t index);
 
-volatile static int pos;
+static volatile int pos;
+static volatile int fire;
+static volatile int status_a;
+static volatile int status_b;
+
+static fsm_t fsm;
+
+/*******************************************************************************
+ * FUNCIONES FSM
+*******************************************************************************/
+
+enum {
+	ESTADO_00,
+	ESTADO_01,
+	ESTADO_10,
+	ESTADO_11
+};
+
+static void subir(fsm_t* this){
+	++pos;
+	fire = 0;
+}
+
+static void bajar(fsm_t* this){
+	--pos;
+	fire = 0;
+}
+
+static int estado00(fsm_t* this){
+	if(!fire) return 0;
+	return !status_a && !status_b;
+}
+
+static int estado01(fsm_t* this){
+	if(!fire) return 0;
+	return !status_a && status_b;
+}
+
+static int estado10(fsm_t* this){
+	if(!fire) return 0;
+	return status_a && !status_b;
+}
+
+static int estado11(fsm_t* this){
+	if(!fire) return 0;
+	return status_a && status_b;
+}
+
+
+
+
+static fsm_trans_t transiciones[] = {
+	{ESTADO_00, estado01, ESTADO_01, bajar},
+	{ESTADO_00, estado10, ESTADO_10, subir},
+	{ESTADO_01, estado00, ESTADO_00, subir},
+	{ESTADO_01, estado11, ESTADO_11, bajar},
+	{ESTADO_10, estado00, ESTADO_00, bajar},
+	{ESTADO_10, estado11, ESTADO_11, subir},
+	{ESTADO_11, estado01, ESTADO_01, subir},
+	{ESTADO_11, estado10, ESTADO_10, bajar},
+	{-1, NULL, -1, NULL}
+};
+
+
 
 static void enc_isr(const uint32_t id, const uint32_t index){
-	int pin_a = pio_get(ENC_A_PORT, PIO_TYPE_PIO_INPUT, ENC_A_PIN);
-	int pin_b = pio_get(ENC_B_PORT, PIO_TYPE_PIO_INPUT, ENC_B_PIN);
-	printf("Interrupt: a=%d, b=%d\r\n", pin_a, pin_b);
+	status_a = pio_get(ENC_A_PORT, PIO_TYPE_PIO_INPUT, ENC_A_PIN);
+	status_b = pio_get(ENC_B_PORT, PIO_TYPE_PIO_INPUT, ENC_B_PIN);
+	fire = 1;
 }
+
 
 void encoder_init(void){
 	// Disable interrutps
@@ -45,4 +110,22 @@ void encoder_init(void){
 	// Enable interrupts
 	NVIC_EnableIRQ(ENC_A_IRQ);
 	NVIC_EnableIRQ(ENC_B_IRQ);
+
+	encoder_clear();
+
+
+	fsm_init(&fsm, ESTADO_00, transiciones);
+}
+
+int encoder_clear(void){
+	pos = 0;
+	return 0;
+}
+
+void encoder_fire(void){
+	fsm_fire(&fsm);
+}
+
+int encoder_getpos(void){
+	return pos;
 }
