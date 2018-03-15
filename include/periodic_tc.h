@@ -8,10 +8,9 @@
 #define PTC_PCM ID_TC1
 #define PTC_IRQ TC1_IRQn
 #define PTC_PRIORITY 9
-#define PTC_COUNT 42000000U
 #define PTC_ISR void TC1_Handler(void)
 
-void periodic_init(void);
+void periodic_init(unsigned int frec);
 
 
 #endif //PERIODIC_TC_H

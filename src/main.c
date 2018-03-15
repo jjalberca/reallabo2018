@@ -7,7 +7,19 @@
 #include "encoder.h"
 #include "driver_motor.h"
 
+#define SAMPLE_LEN 1200
 
+static void toggle_pin(void);
+static void save_pos(void);
+
+typedef struct{
+	unsigned int time;
+	int pos;
+} sample;
+
+
+static sample samples[SAMPLE_LEN];
+static unsigned int p = 0;
 
 // Mensaje de inicio
 #define STRING_HEADER "-- Blink LED Example --\r\n" \
@@ -22,10 +34,28 @@ PTC_ISR {
 	// Para saber qué ha causado la interrupción
 	uint32_t tc_status = tc_get_status(PTC_INT, PTC_INT_CH);
 	if (tc_status & TC_SR_CPCS){
-		printf("CC: %lu\r\n", sys_ticks);
-		printf("Pasos: %d\r\n", encoder_getpos());
-		pio_toggle_pin(PIO_PB27_IDX);
+		save_pos();
+		toggle_pin();
 	}
+}
+static void save_pos(void){
+
+
+	if(p >= SAMPLE_LEN) return;
+
+	samples[p].time = sys_ticks;
+	samples[p].pos = encoder_getpos();
+
+	++p;
+}
+
+static void toggle_pin(void){
+	static unsigned int next = 0;
+	unsigned int current = sys_ticks;
+	if(current < next) return;
+
+	pio_toggle_pin(PIO_PB27_IDX);
+	next = current + 1000;
 }
 
 
@@ -46,7 +76,7 @@ int main(void) {
 	// Establece el pin 27 como salida
 	pio_set_output(PIOB, PIO_PB27, LOW, DISABLE, ENABLE);
 	// Rutina de configuración del timer
-	periodic_init();
+	periodic_init(1000);
 
 	encoder_init();
 
@@ -68,5 +98,22 @@ int main(void) {
 		*/
 
 		encoder_fire();
+
+		if(p == SAMPLE_LEN){
+			for(int i=0; i<SAMPLE_LEN; i++){
+				printf("%d \t %d\n\r", samples[i].time, samples[i].pos);
+			}
+			p = 0;
+		}
+
+		/*
+		int val;
+		int ret = scanf("%d", &val);
+		if(ret){
+			printf("In: %d\n\r", val);
+			motor_set(val);
+		}
+		fflush(stdin);
+		*/
 	}
 }

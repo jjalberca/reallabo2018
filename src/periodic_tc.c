@@ -1,7 +1,8 @@
 #include "periodic_tc.h"
 
+#define FREC_MCK 84000000U
 
-void periodic_init(void){
+void periodic_init(unsigned int frec){
 	// Encendemos el timer0
 	pmc_enable_periph_clk(PTC_PCM);
 	// Desactivamos interupciones antes de cambiar nada
@@ -24,7 +25,7 @@ void periodic_init(void){
 		TC_IER_CPBS | // RB
 		TC_IER_CPCS); // RC
 		// Mete valores en los registros de comparación
-	tc_write_rc(PTC_INT,PTC_INT_CH,PTC_COUNT);
+	tc_write_rc(PTC_INT,PTC_INT_CH,FREC_MCK/2/frec);
 	tc_start(PTC_INT,PTC_INT_CH);
 	// Permitimos las interrupciones
 	NVIC_EnableIRQ(PTC_IRQ);

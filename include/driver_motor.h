@@ -12,7 +12,7 @@
 #define MOT_I2_MASK PIO_PC26
 #define MOT_I2_PORT PIOC
 #define MOT_I2_PCM ID_PIOC
-#define MOT_PWM 5000
+#define MOT_PWM 25000
 
 void motor_init(void);
 void motor_dir(int dir);

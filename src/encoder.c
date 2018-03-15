@@ -89,9 +89,9 @@ void encoder_init(void){
 
 	pmc_enable_periph_clk(ENC_A_ID);
 	pio_set_input(ENC_A_PORT, ENC_A_PIN, 0 |
-		PIO_PULLUP |
-		PIO_DEBOUNCE);
-	pio_set_debounce_filter(ENC_A_PORT,ENC_A_PIN, 100);
+		PIO_PULLUP);// |
+		//PIO_DEBOUNCE);
+	//pio_set_debounce_filter(ENC_A_PORT,ENC_A_PIN, 100);
 	pio_handler_set(ENC_A_PORT, ENC_A_ID, ENC_A_PIN, PIO_IT_EDGE, enc_isr);
 	pio_enable_interrupt(ENC_A_PORT, ENC_A_PIN);
 
@@ -101,9 +101,9 @@ void encoder_init(void){
 
 	pmc_enable_periph_clk(ENC_B_ID);
 	pio_set_input(ENC_B_PORT, ENC_B_PIN, 0 |
-		PIO_PULLUP |
-		PIO_DEBOUNCE);
-	pio_set_debounce_filter(ENC_B_PORT,ENC_B_PIN, 100);
+		PIO_PULLUP);// |
+		//PIO_DEBOUNCE);
+	//pio_set_debounce_filter(ENC_B_PORT,ENC_B_PIN, 100);
 	pio_handler_set(ENC_B_PORT, ENC_B_ID, ENC_B_PIN, PIO_IT_EDGE, enc_isr);
 	pio_enable_interrupt(ENC_B_PORT, ENC_B_PIN);
 
