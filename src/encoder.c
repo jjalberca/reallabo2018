@@ -12,6 +12,7 @@ static volatile int status_a;
 static volatile int status_b;
 
 static fsm_t fsm;
+static int init = 0;
 
 /*******************************************************************************
  * FUNCIONES FSM
@@ -75,6 +76,7 @@ static void enc_isr(const uint32_t id, const uint32_t index){
 	status_a = pio_get(ENC_A_PORT, PIO_TYPE_PIO_INPUT, ENC_A_PIN);
 	status_b = pio_get(ENC_B_PORT, PIO_TYPE_PIO_INPUT, ENC_B_PIN);
 	fire = 1;
+	encoder_fire();
 }
 
 
@@ -115,6 +117,7 @@ void encoder_init(void){
 
 
 	fsm_init(&fsm, ESTADO_00, transiciones);
+	init = 1;
 }
 
 int encoder_clear(void){
@@ -123,7 +126,7 @@ int encoder_clear(void){
 }
 
 void encoder_fire(void){
-	fsm_fire(&fsm);
+	if(init) fsm_fire(&fsm);
 }
 
 int encoder_getpos(void){
