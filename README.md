@@ -17,6 +17,7 @@
 
 Cables amarillo y blanco del motor son para el encoder (interrupciones).
 Y el Azul y el Verde son 3.3V y GND en ese orden.
+**Nosotros utilizamos el amarillo en el A8 y blanco en el A9.**
 
 Relación entre pines del micro y de la placa:
 - [Arduino oficial PinMapping SAM3X](https://www.arduino.cc/en/Hacking/PinMappingSAM3X)
