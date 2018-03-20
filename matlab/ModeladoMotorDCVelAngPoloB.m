@@ -40,7 +40,7 @@ function  ModeladoMotorDCVelAngPoloB(indTension,Tension,CPR,Periodo,Tiempo,Pulso
 %CPR=12;% pulsos/vuelta
 IniS=1;% inicial subida
 InfS=601;% final subida
-InfB=1200;% subida + bajada
+InfB=1201;% subida + bajada
 kTs=401;% frontera régimen permanente subida
 DeltatS=60;
 DnS=2;%>=2
