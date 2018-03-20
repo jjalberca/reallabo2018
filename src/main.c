@@ -10,7 +10,7 @@
 /** Auto Test **/
 #define SAMPLE_LEN 1200
 #define N_REP 10
-#define STEPS 1,2,3,4,5,6,7,8,9
+#define STEPS 1,2,3,4,5,6,7,8,9,10,11,12
 #define V_REF 12
 /***************/
 
@@ -124,7 +124,7 @@ static void test_motor(void){
 	const int steps[] = {STEPS};
 	motor_set(0);
 
-	for(unsigned int i=0; i < 8; i++){
+	for(unsigned int i=0; i < sizeof(steps)/sizeof(steps[0]); i++){
 
 		for(int j=0; j < N_REP; j++){
 			int pwm_value = (1000*steps[i])/12;
