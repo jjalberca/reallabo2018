@@ -7,9 +7,7 @@
 	colorlinks=true,
 	pdfauthor={Alejandro Vicario Espinosa},
 	pdftitle={}]{hyperref}
-%\usepackage{titlesec}
 
-%\setcounter{secnumdepth}{4}
 \graphicspath{ {curvas/} }
 
 \begin{document}
@@ -77,7 +75,7 @@ Cuenta con un control de velocidad manual y con una rutina que realiza los test 
 por el puerto serie para que puedan ser almacenados en un fichero.
 
 \section{Modelado experimental de un motor DC con la arquitectura hardware y sofware implementadas}
-\subsection{Experimentos realizados}
+\subsection{Experimentos realizados \label{sec:exp}}
 A partir del software descrito en la sección \ref{sec:software} se han realizado test para obtener la de respuesta al escalón del motor,
 tanto para condiciones iniciales nulas y no nulas.
 Para esto se ha excitado el motor con una señal cuadrada que introduce un voltaje durante $600ms$ e introduce $0V$ por otros $600ms$
@@ -96,29 +94,51 @@ Se han promediado las P repeticiones en cada uno de los experimentos y con ello 
 de Matlab proporcionados usan en sus cálculos para modelar el motor.
 
 
-\begin{figure}[!hbp]
+\begin{figure}[hbp]
 	\begin{center}
 		\includegraphics[width=8cm]{n_pulsos}
-		\caption{Datos obtenidos del motor DC.\label{datos}}
+		\caption{Media de los datos obtenidos del motor DC.}
+		\label{datos}
 	\end{center}
 \end{figure}
 
-\subsection{Primera Fase: Obtención del valor medio de velocidades angulares del régimen permanente}
-Lo siguiente que se obtiene son los valores medios de las velocidades angulares a lo largo del tiempo con cada valor de tensión utilizada.
-Se puede apreciar en la figura. Con estos valores completamos la primera fase. INSERTAR IMAGEN
+\subsection{Obtención de la función de transferencia}
+El objetivo de esta sección es obtener la función de transferencia del motor a partir de los datos obtenidos en la sección \ref{sec:exp}.
+Para ello se usa el modelo simplificado de está despreciando los polos no dominantes:
 
-\subsection{Segunda Fase: Cálculo del polo medio de varianza mínima}
-La segunda fase consiste en en cálculo del polo medio y la varianza mínima que se generan al estudiar el motor durante el régimen transitorio.
-Los resultados obtenidos son los de las siguientes figuras: INSERTAR IMÁGENES
+\begin{equation}
+	\label{eq:trans}
+	\dot{\theta}_m (s) = \frac{K}{s+p}
+\end{equation}
 
-Se pueden apreciar los 12 polos, cuya combinación lineal explicada en la sección 3.2.2. del documento \cite{modelado} da como resultado un polo
-pM=29.9483.
-AHORA HAY UNA SUBSECCION SOBRE INTERVALOS TEMPORALES QUE NO ENTIENDO MUY BIEN.
 
-\subsection{Tercera Fase: cálculo de K y de la tensión de entrada equivalente}
-Se obtienen los diferentes valores de K a partir de los polos hallados en el apartado anterior y también los valores de tensión equivalente.
-Estos valores son los adjuntados y se obtiene KM=1372.1456.
-INSERTAR IMAGEN CON VALORES.
+Para ello se necesitan los valores medios de las velocidades angulares ($\dot{\theta}_m$) a lo largo del tiempo con cada valor de tensión utilizado.
+Estos se calculan derivando los datos obtenidos sobre la posición del motor. El resultado de la derivada discreta se representa en verde en la figura \ref{velAng}.
+
+\begin{figure}[htbp]
+	\begin{center}
+
+		\includegraphics[width=8cm]{vel_ang}
+		\caption{derivada de la posicion (en verde). Ni idea (en rojo). Tampoco (en azul)}
+		\label{velAng}
+	\end{center}
+\end{figure}
+
+La segunda fase consiste en estudiar el régimen transitorio para realizar el cálculo del polo medio y la varianza mínima para cada valor de tensión.
+En la figura \ref{polos} se pueden apreciar los 12 polos obtenidos, cuya combinación lineal explicada en la sección 3.2.2. del documento de modelado\cite{modelado}
+da como resultado un polo $pM=29.9483$.
+
+Cuando se considera el motor en régimen permanente la función de transferencia queda como:
+
+\begin{equation}
+	\label{eq:trans0}
+	\dot{\theta}_m (0) = K/p
+\end{equation}
+
+A partir de la zona en la que se considera terminado el régimen transitorio se obtiene el valor de la velocidad nominal del motor para cada valor de tension.
+Usando estos valores junto el valor del polo obtenido anteriormente se puede aplicar la ecuacion \ref{eq:trans0} pueden obtener los valores de ganancia $K$ indicados en la
+figura \ref{valoresK}.
+Usando estos valores se obtiene la ganancia media $KM=1372.1456$ y las tensiones de entrada equivalente de la tabla \ref{veq1}.
 
 \subsection{Cuarta Fase: Identificación de la función no lineal del modelo del motor mediante
 la técnica de interpolación polinómica}
