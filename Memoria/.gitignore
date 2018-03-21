@@ -3,3 +3,6 @@
 *.log
 *.pdf
 *.out
+*.bbl
+*.blg
+*.syntcex
