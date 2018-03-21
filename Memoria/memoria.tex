@@ -18,7 +18,7 @@
 \large RealLabo 2018. Modelado e implementación}
 \author{
 	Juan José Alberca\\
-	\texttt{asd@alumnos.upm.es}
+	\texttt{jj.alberca@alumnos.upm.es}
 	\and
 	Alejandro Vicario\\
 	\texttt{a.vicarioe@alumnos.upm.es}
@@ -92,7 +92,9 @@ V \in \{1,2,3,4,5,6,7,8,9,10,11,12\}
 Es decir, se tienen $P=10$ repeticiones de $Q=12$ experimentos. El eje del motor tiene, por su parte, una q=48 pulsos/vuelta.
 El procedimiento seguido es el explicado en la sección 3.2 del documento modelado de la asignatura \cite{modelado}.
 
-Se han promediado las P repeticiones en cada uno de los experimentos y con ello se obtienen los datos de la figura \ref{datos} que los \emph{scripts} de Matlab proporcionados usan en sus cálculos para caracterizar el motor.
+Se han promediado las P repeticiones en cada uno de los experimentos y con ello se obtienen los datos de la figura \ref{datos} que los \emph{scripts}
+de Matlab proporcionados usan en sus cálculos para modelar el motor.
+
 
 \begin{figure}[!hbp]
 	\begin{center}
@@ -100,6 +102,61 @@ Se han promediado las P repeticiones en cada uno de los experimentos y con ello 
 		\caption{Datos obtenidos del motor DC.\label{datos}}
 	\end{center}
 \end{figure}
+
+\subsection{Primera Fase: Obtención del valor medio de velocidades angulares del régimen permanente}
+Lo siguiente que se obtiene son los valores medios de las velocidades angulares a lo largo del tiempo con cada valor de tensión utilizada.
+Se puede apreciar en la figura. Con estos valores completamos la primera fase. INSERTAR IMAGEN
+
+\subsection{Segunda Fase: Cálculo del polo medio de varianza mínima}
+La segunda fase consiste en en cálculo del polo medio y la varianza mínima que se generan al estudiar el motor durante el régimen transitorio.
+Los resultados obtenidos son los de las siguientes figuras: INSERTAR IMÁGENES
+
+Se pueden apreciar los 12 polos, cuya combinación lineal explicada en la sección 3.2.2. del documento \cite{modelado} da como resultado un polo
+pM=29.9483.
+AHORA HAY UNA SUBSECCION SOBRE INTERVALOS TEMPORALES QUE NO ENTIENDO MUY BIEN.
+
+\subsection{Tercera Fase: cálculo de K y de la tensión de entrada equivalente}
+Se obtienen los diferentes valores de K a partir de los polos hallados en el apartado anterior y también los valores de tensión equivalente.
+Estos valores son los adjuntados y se obtiene KM=1372.1456.
+INSERTAR IMAGEN CON VALORES.
+
+\subsection{Cuarta Fase: Identificación de la función no lineal del modelo del motor mediante
+la técnica de interpolación polinómica}
+
+Se pueden comparar con los valores de tensión introducidos con las siguientes figuras:
+INSERTAR FIGURAS INSERTAR VALORES.
+
+También se ha calculado el error cuadrático que es J=0.0918. De las figuras se pueden obtener los valores del polinomio impar de grado 12, que son
+los siguientes:
+INSERTAR VALORES DEL POLINOMIO
+
+También se calcula el polinomio inverso, que serán necesario para el siguiente apartado.
+
+\subsection{Función de transferencia}
+Sabiendo forma de la función de transferencia, y viendo los datos que se han obtenido, es la siguiente:
+
+\begin{equation}
+G(s) = \frac{KM}{s+pM} = \frac{1372.1456}{s+29.9483}
+\end{equation}
+
+
+\subsection{Problemas encontrados durante la obtención de las gráficas de esta sección}
+Como el profesor podrá recordar, nuestro grupo tubo ciertos problemas a la hora de obtener las gráficas presentadas en esta sección, concretamente las gráficas de polos y de varianza,
+ya que estas aparecían con intervalos en blanco sin saber muy bien la razón. Tras indagar sobre el tema, se encontró cual era la causa
+del problema y se solucionó. Parece ser que la interrupción que se había activado para el control del tiempo por milisegundos a veces
+no era lo bastante rápida ya que la interrupción encargada de tomar datos en los flancos de subida o bajada de los pines de los que obtenemos
+los datos de movimiento del motor parecía ser más rápida, por lo que tomaba varios datos en el mismo instante de tiempo. Para solucionar este
+contratiempo, se ha realizado una media de los tiempos al mismo tiempo que se realiza la media de los datos de tensión. Esta modificación del
+software realizado en matlab se encuentra en el repositorio GitHub.
+
+
+\section{Análisis, diseño e implementación de un controlador P para un control de posición angular}
+
+--sección vacía
+
+\section{Conclusiones}
+
+--sección vacía
 
 
 
