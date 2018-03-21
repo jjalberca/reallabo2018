@@ -2,6 +2,7 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage[spanish]{babel}
+\usepackage[pdftex]{color,graphicx}
 \usepackage[pdftex,
 	colorlinks=true,
 	pdfauthor={Alejandro Vicario Espinosa},
@@ -9,6 +10,7 @@
 %\usepackage{titlesec}
 
 %\setcounter{secnumdepth}{4}
+\graphicspath{ {curvas/} }
 
 \begin{document}
 
@@ -87,9 +89,18 @@ Esta prueba se ha repetido 10 veces para cada uno de los siguiente valores efica
 V \in \{1,2,3,4,5,6,7,8,9,10,11,12\}
 \end{displaymath}
 
-Es decir, se tienen P=10 repeticiones de Q=12 experimentos. El eje del motor tiene, por su parte, una q=48 pulsos/vuelta.
+Es decir, se tienen $P=10$ repeticiones de $Q=12$ experimentos. El eje del motor tiene, por su parte, una q=48 pulsos/vuelta.
 El procedimiento seguido es el explicado en la sección 3.2 del documento modelado de la asignatura \cite{modelado}.
-Se han promediado las P repeticiones en cada uno de los experimentos y con ello se obtienen los datos que el programa Matlab utiliza para calcular los datos y las gráficas relevantes para el modelado del motor.
+
+Se han promediado las P repeticiones en cada uno de los experimentos y con ello se obtienen los datos de la figura \ref{datos} que los \emph{scripts} de Matlab proporcionados usan en sus cálculos para caracterizar el motor.
+
+\begin{figure}[!hbp]
+	\begin{center}
+		\includegraphics[width=8cm]{n_pulsos}
+		\caption{Datos obtenidos del motor DC.\label{datos}}
+	\end{center}
+\end{figure}
+
 
 
 \begin{thebibliography}{99}
