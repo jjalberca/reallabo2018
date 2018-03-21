@@ -40,7 +40,7 @@ la alimentación del encoder se ha conectado a alguna de las salidas de \emph{3.
 los cables amarillo y blanco del encoder se han conectado en los pines \texttt{A8} y \texttt{A9} de la placa respectivamente.
 
 \subsubsection{Obtención de PWM}
-En esta sección se pretence explicar el procedimiento seguido para obtener la señal modulada en ancho de pulso (\emph{PWM}) para controlar la potencia entregada al motor.
+En esta sección se pretende explicar el procedimiento seguido para obtener la señal modulada en ancho de pulso (\emph{PWM}) para controlar la potencia entregada al motor.
 
 El microprocesador cuenta con ocho periféricos \emph{PWM}, cuya única función es generar señales de este tipo. Sin embargo,
 las salidas de estos periféricos son fijas y además no coinciden con los pines que se necesitan para controlar el puente en H, 4 y 5, en la placa del Arduino,
@@ -54,14 +54,14 @@ Para generar esta señal se utilizó el canal 0 del \emph{timer} 2 (\texttt{TIOA
 \subsubsection{Quadrature decoder}
 El \textbf{SAM3XE8} contiene un decodificador de las señales del encoder del motor en hardware,
 que permite controlar su posición y/o su velocidad sin ningún software adicional, usando los canales 0, 1 y 2 del \emph{timer} 0 (\emph{TC0}) para este propósito.
-Sin embargo, no es facil de integrar en este proyecto, ya que la entrada de \emph{Enable} del canal 1 del puente H, coincide con una de las entradas del decodificador (\emph{TIOA0}).
+Sin embargo, no es fácil de integrar en este proyecto, ya que la entrada de \emph{Enable} del canal 1 del puente H, coincide con una de las entradas del decodificador (\emph{TIOA0}).
 Por lo que habría que modificar la \emph{shield} para dejar las entradas \texttt{TIOA0} y \texttt{TIOB0} libres.
 
-Por lo tanto la lectura de la posición del motor se realiza mediante interrupcciones y rutinas software.
+Por lo tanto la lectura de la posición del motor se realiza mediante interrupciones y rutinas software.
 
-\subsubsection{Interrupcciones}
+\subsubsection{Interrupciones}
 Se ha activado una interrupción periódica del \emph{SysTick} cada milisegundo para obtener un contador fiable del tiempo transcurrido.
-Se ha utlizado también otra interrupción periódica a un milisegundo usando el canal 1 del \emph{timer} 0 para realizar diversas tareas en software que requieren temporización.
+Se ha utilizado también otra interrupción periódica a un milisegundo usando el canal 1 del \emph{timer} 0 para realizar diversas tareas en software que requieren temporización.
 
 Por último también se ha activado una interrupción por flanco de subida o bajada en los pines de entrada a los que está conectado el encoder para realizar la decodificación de la posición.
 
@@ -69,14 +69,14 @@ Por último también se ha activado una interrupción por flanco de subida o baj
 El software utilizado se ha desarrollado sobre el \emph{framework} que Atmel proporciona para sus dispositivos: \textbf{Atmel Software Framework}.
 Todo el código se encuentra en un repositorio de GitHub \cite{git}.
 
-Del software cabe destacar que se ha intentado realizar la mayoría de las tareas utlizando los periféricos hardware. Por lo tanto,
+Del software cabe destacar que se ha intentado realizar la mayoría de las tareas utilizando los periféricos hardware. Por lo tanto,
 la mayor parte del código consiste en drivers que sirven para inicializar estos periféricos e interactuar con las funciones de los mismo.
 
-Para controlar el sistema se ha implementado una interfaz de comunicación con el sistema mediante el puerto serie con el objetivo de facilitar su uso.
+Para controlar el sistema se ha implementado una interfaz de comunicación con el sistema mediante el puerto serie con el objetivo de fácilitar su uso.
 Cuenta con un control de velocidad manual y con una rutina que realiza los test que se necesitan para obtener los datos utilizados para el modelado del motor y los vuelca
 por el puerto serie para que puedan ser almacenados en un fichero.
 
-\section{Modelado experimental de un motor DC con la arquitectura hardware y sofware implementadas}
+\section{Modelado experimental de un motor DC con la arquitectura hardware y software implementadas}
 \subsection{Experimentos realizados \label{sec:exp}}
 A partir del software descrito en la sección \ref{sec:software} se han realizado test para obtener la de respuesta al escalón del motor,
 tanto para condiciones iniciales nulas y no nulas.
@@ -137,8 +137,8 @@ Cuando se considera el motor en régimen permanente la función de transferencia
 	\dot{\theta}_m (0) = K/p
 \end{equation}
 
-A partir de la zona en la que se considera terminado el régimen transitorio se obtiene el valor de la velocidad nominal del motor para cada valor de tension.
-Usando estos valores junto el valor del polo obtenido anteriormente se puede aplicar la ecuacion \ref{eq:trans0} pueden obtener los valores de ganancia $K$ indicados en la
+A partir de la zona en la que se considera terminado el régimen transitorio se obtiene el valor de la velocidad nominal del motor para cada valor de tensión.
+Usando estos valores junto el valor del polo obtenido anteriormente se puede aplicar la ecuación \ref{eq:trans0} pueden obtener los valores de ganancia $K$ indicados en la
 figura \ref{valoresK}.
 Usando estos valores se obtiene la ganancia media $KM=1372.1456$ y las tensiones de entrada equivalente de la tabla \ref{veq}.
 
@@ -178,7 +178,7 @@ Usando estos valores se obtiene la ganancia media $KM=1372.1456$ y las tensiones
 			12 & 12,164355 \\
 			\end{tabular}
 	\end{center}
-	\caption{Valores de tension equivalentes calculados}
+	\caption{Valores de tensión equivalentes calculados}
 	\label{veq}
 \end{table}
 
@@ -187,7 +187,7 @@ También se calcula el polinomio inverso, que serán necesario para el siguiente
 
 \begin{figure}[htbp]
 	\begin{center}
-		\includegraphics[width=8cm]{curva_polinomica}
+		\includegraphics[width=10cm]{curva_polinomica}
 		\caption{}
 		\label{polinomioA}
 	\end{center}
@@ -218,7 +218,7 @@ a_23
 \end{array} \right)
 \end{equation}
 
-Finalmente, susstituyendo los valores obtenidos anteriormente en la ecuacion \ref{trans} se obtiene:
+Finalmente, sustituyendo los valores obtenidos anteriormente en la ecuación \ref{eq:trans} se obtiene:
 
 \begin{equation}
 	\label{eq:transVal}
@@ -229,18 +229,26 @@ Finalmente, susstituyendo los valores obtenidos anteriormente en la ecuacion \re
 \subsection{Problemas encontrados durante la obtención de las gráficas de esta sección}
 Como el profesor podrá recordar, nuestro grupo tuvo ciertos problemas a la hora de obtener las gráficas presentadas en esta sección, concretamente las gráficas de polos y de varianza,
 ya que estas aparecían con intervalos en blanco sin saber muy bien la razón. Tras indagar sobre el tema, se encontró cual era la causa
-del problema y se solucionó. Parece ser que la interrupcción que se había activado para el control del tiempo por milisegundos a veces
-no era lo bastante rápida ya que la interrupcción encargada de tomar datos en los flancos de subida o bajada de los pines de los que obtenemos
-los datos de movimiento del motor parecía ser más rápida, por lo que tomaba dos datos con el mismo tiempo, por lo que al calcular la velocidad se obtenian infinitos.
+del problema y se solucionó. Parece ser que la interrupción que se había activado para el control del tiempo por milisegundos a veces
+no era lo bastante rápida ya que la interrupción encargada de tomar datos en los flancos de subida o bajada de los pines de los que obtenemos
+los datos de movimiento del motor parecía ser más rápida, por lo que tomaba dos datos con el mismo tiempo, por lo que al calcular la velocidad se obtenían infinitos.
 Para solucionar este contratiempo, se ha realizado una media de los tiempos junto con la media de los datos de tensión.
 Esta modificación del software realizado en matlab se encuentra en el repositorio GitHub.
 
-También tuvimos ciertos problemas con la activación de las interrupcciones generadas por \emph{timers}, ya que la nomenclatura usada en el \emph{framework} no es nada clara.
+También tuvimos ciertos problemas con la activación de las interrupciones generadas por \emph{timers}, ya que la nomenclatura usada en el \emph{framework} no es nada clara.
 Al parecer, en el driver que controla los timers se considera que existen únicamente 3 (TC0, TC1 y TC2) con 3 canales cada uno que se seleccionan con un parámetro en sus funciones,
-sin embargo, tanto el el driver del PCM como en controlador de las interrupciones (NVIC), existen 9 timers (TC0, TC1, ..., TC8) complétamente independientes. Por lo que era necesario
+sin embargo, tanto el el driver del PCM como en controlador de las interrupciones (NVIC), existen 9 timers (TC0, TC1, ..., TC8) completamente independientes. Por lo que era necesario
 usar distintas referencias según el driver con el que estuvieras interactuando.
 
 \section{Análisis, diseño e implementación de un controlador P para un control de posición angular}
+
+Para implementar un controlador de la posición es suficiente con hacer un bucle de realimentación lineal,
+sin embargo, para que sea más eficaz, se ha usado el modelo del motor que se ha obtenido en la sección anterior.
+
+Se ha usado el cálculo del voltaje equivalente para obtener los valores de tensión real que hay que introducir al motor para que se comporte de la forma esperada por el
+controlador lineal.
+
+Para ello se ha usado la inversa de la función no lineal para el modelo del motor, representada en la figura \ref{polinomioB} y sus coeficientes son:
 
 \begin{equation}
 b =
@@ -267,6 +275,17 @@ b_12
 
 \end{array} \right)
 \end{equation}
+
+\begin{figure}[htbp]
+	\begin{center}
+		\includegraphics[width=10cm]{curva_polinomica_inversa}
+		\caption{}
+		\label{polinomioB}
+	\end{center}
+\end{figure}
+
+Dado que estamos trabajando con un microprocesador de baja potencia no se ha implementado la función matemática en software, si no que se ha usado una \emph{lookup table} generada
+en Matlab de la que el controlador obtiene los valores oportunos.
 
 \section{Conclusiones}
 
