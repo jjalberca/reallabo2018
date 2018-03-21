@@ -6,6 +6,7 @@
 #include "periodic_tc.h"
 #include "encoder.h"
 #include "driver_motor.h"
+#include "position_control.h"
 
 /** Auto Test **/
 #define SAMPLE_LEN 1200
@@ -14,20 +15,35 @@
 #define V_REF 12
 /***************/
 
+#define PCONTROL_P 1;
+
 static void toggle_pin(void);
 static void save_pos(void);
 static void test_motor(void);
 static void manual_speed(void);
+static void position_control(void);
+static void set_position(void);
+static void set_position_move(void);
+
 
 typedef struct{
 	unsigned int time;
 	int pos;
 } sample;
 
+enum {
+	PCONTROL_DIS,
+	PCONTROL_POS,
+	PCONTROL_SPEED
+};
+
 
 static sample samples[SAMPLE_LEN];
 static volatile unsigned int p = 0;
 static unsigned int start_time = 0;
+
+static volatile int pcontrol_en = PCONTROL_DIS;
+static volatile int pcontrol_speed = 0;
 
 // Mensaje de inicio
 #define STRING_HEADER "-- RealLabo2018 Motor test --\r\n" \
@@ -46,6 +62,7 @@ PTC_ISR {
 	if (tc_status & TC_SR_CPCS){
 		save_pos();
 		toggle_pin();
+		position_control();
 	}
 }
 
@@ -65,6 +82,16 @@ static void toggle_pin(void){
 
 	pio_toggle_pin(PIO_PB27_IDX);
 	next = current + 1000;
+}
+
+static void position_control(void){
+	if(pcontrol_en == PCONTROL_DIS) return;
+
+	if(pcontrol_en == PCONTROL_SPEED){
+		pcontrol_move(pcontrol_speed);
+	}
+
+	motor_set(pcontrol_fire(encoder_getpos()));
 }
 
 
@@ -97,7 +124,10 @@ int main(void) {
 		puts(
 			"Choose:\n\r" \
 			"-- Auto test:    1\n\r" \
-			"-- Manual speed: 2\r"
+			"-- Manual PWM: 2\n\r" \
+			"-- Position Control: 3\n\r" \
+			"-- Speed Control: 4\r\n\n\n" \
+			"     * Any key to return\r"
 		);
 
 
@@ -111,6 +141,12 @@ int main(void) {
 					break;
 				case 2:
 					manual_speed();
+					break;
+				case 3:
+					set_position();
+					break;
+				case 4:
+					set_position_move();
 					break;
 				default:
 					puts("Incorrect option\r");
@@ -146,16 +182,51 @@ static void test_motor(void){
 	}
 }
 
-// TODO print position when manual speed
+// TODO print position when manual pwm
 static void manual_speed(void){
-	puts("Speed [-1000, 1000]\n\r");
+	puts("PWM [-1000, 1000]\r");
+	while(1){
+		int val;
+		int ret = scanf("%d", &val);
+		if(!ret) break;
+
+		printf("PWM: %d\n\r", val);
+		motor_set(val);
+	}
+
+}
+
+static void set_position(void){
+	puts("Position Control\n\r" \
+		"Enter Position (Counts)\r"
+	);
+	encoder_clear();
+	pcontrol_en = PCONTROL_POS;
+	while(1){
+		int val;
+		int ret = scanf("%d", &val);
+		if(!ret) break;
+
+		printf("Pos: %d\n\r", val);
+		pcontrol_set(val);
+	}
+	pcontrol_en = PCONTROL_DIS;
+}
+
+static void set_position_move(void){
+	puts("Speed Control\n\r" \
+		"Enter Speed (Counts/ms)\r"
+	);
+	encoder_clear();
+	pcontrol_speed = 0;
+	pcontrol_en = PCONTROL_SPEED;
 	while(1){
 		int val;
 		int ret = scanf("%d", &val);
 		if(!ret) break;
 
 		printf("Speed: %d\n\r", val);
-		motor_set(val);
+		pcontrol_speed = val;
 	}
-
+	pcontrol_en = DISABLE;
 }

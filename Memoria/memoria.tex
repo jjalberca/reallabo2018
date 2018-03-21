@@ -53,13 +53,13 @@ Para generar esta señal se utilizó el canal 0 del \emph{timer} 2 (\texttt{TIOA
 
 \subsubsection{Quadrature decoder}
 El \textbf{SAM3XE8} contiene un decodificador de las señales del encoder del motor en hardware,
-que permite controlar su posición y/o su velocidad sin ningún software adicional, usando los canales 0, 1 y 2 del \emph{timer} 0 (\emph{TC0}) para este propósito.
+que permite controlar su posición y/o su velocidad sin ningún software adicional, usando los canales 0, 1 y 2 del \emph{timer} 0 (\texttt{TC0}) para este propósito.
 Sin embargo, no es fácil de integrar en este proyecto, ya que la entrada de \emph{Enable} del canal 1 del puente H, coincide con una de las entradas del decodificador (\emph{TIOA0}).
 Por lo que habría que modificar la \emph{shield} para dejar las entradas \texttt{TIOA0} y \texttt{TIOB0} libres.
 
 Por lo tanto la lectura de la posición del motor se realiza mediante interrupciones y rutinas software.
 
-\subsubsection{Interrupciones}
+\subsubsection{Interrupciones \label{int}}
 Se ha activado una interrupción periódica del \emph{SysTick} cada milisegundo para obtener un contador fiable del tiempo transcurrido.
 Se ha utilizado también otra interrupción periódica a un milisegundo usando el canal 1 del \emph{timer} 0 para realizar diversas tareas en software que requieren temporización.
 
@@ -70,11 +70,11 @@ El software utilizado se ha desarrollado sobre el \emph{framework} que Atmel pro
 Todo el código se encuentra en un repositorio de GitHub \cite{git}.
 
 Del software cabe destacar que se ha intentado realizar la mayoría de las tareas utilizando los periféricos hardware. Por lo tanto,
-la mayor parte del código consiste en drivers que sirven para inicializar estos periféricos e interactuar con las funciones de los mismo.
+la mayor parte del código consiste en drivers que sirven para inicializar estos periféricos e interactuar con las funciones de los mismos.
 
 Para controlar el sistema se ha implementado una interfaz de comunicación con el sistema mediante el puerto serie con el objetivo de fácilitar su uso.
-Cuenta con un control de velocidad manual y con una rutina que realiza los test que se necesitan para obtener los datos utilizados para el modelado del motor y los vuelca
-por el puerto serie para que puedan ser almacenados en un fichero.
+Cuenta con un control de velocidad manual, con una rutina que realiza los test que se necesitan para obtener los datos utilizados para el modelado del motor y los vuelca
+por el puerto serie para que puedan ser almacenados en un fichero y un control de la posición para demostrar lo mostrado en el apartado \ref{control}.
 
 \section{Modelado experimental de un motor DC con la arquitectura hardware y software implementadas}
 \subsection{Experimentos realizados \label{sec:exp}}
@@ -235,12 +235,12 @@ los datos de movimiento del motor parecía ser más rápida, por lo que tomaba d
 Para solucionar este contratiempo, se ha realizado una media de los tiempos junto con la media de los datos de tensión.
 Esta modificación del software realizado en matlab se encuentra en el repositorio GitHub.
 
-También tuvimos ciertos problemas con la activación de las interrupciones generadas por \emph{timers}, ya que la nomenclatura usada en el \emph{framework} no es nada clara.
+También tuvimos ciertos problemas con la activación de las interrupciones generadas por \emph{timers} comentadas en la sección \ref{int}, ya que la nomenclatura usada en el \emph{framework} no es nada clara.
 Al parecer, en el driver que controla los timers se considera que existen únicamente 3 (TC0, TC1 y TC2) con 3 canales cada uno que se seleccionan con un parámetro en sus funciones,
 sin embargo, tanto el el driver del PCM como en controlador de las interrupciones (NVIC), existen 9 timers (TC0, TC1, ..., TC8) completamente independientes. Por lo que era necesario
 usar distintas referencias según el driver con el que estuvieras interactuando.
 
-\section{Análisis, diseño e implementación de un controlador P para un control de posición angular}
+\section{Análisis, diseño e implementación de un controlador P para un control de posición angular \label{control}}
 
 Para implementar un controlador de la posición es suficiente con hacer un bucle de realimentación lineal,
 sin embargo, para que sea más eficaz, se ha usado el modelo del motor que se ha obtenido en la sección anterior.
@@ -293,7 +293,7 @@ en Matlab de la que el controlador obtiene los valores oportunos.
 
 
 
-\begin{thebibliography}{99}
+\begin{thebibliography}{9}
 \bibitem{git} \href{https://github.com/jjalberca/reallabo2018}{Repositorio del proyecto alojado en GitHub}
 \bibitem{modelado} Félix Monasterio-Huelin y Álvaro Gutiérrez: \href{http://robolabo.etsit.upm.es/asignaturas/seco/apuntes/modelado.pdf}{Modelado de un motor DC}
 \end{thebibliography}
