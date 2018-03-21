@@ -3,6 +3,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[spanish]{babel}
 \usepackage[pdftex]{color,graphicx}
+\usepackage{caption}
+
 \usepackage[pdftex,
 	colorlinks=true,
 	pdfauthor={Alejandro Vicario Espinosa},
@@ -118,8 +120,8 @@ Estos se calculan derivando los datos obtenidos sobre la posición del motor. El
 \begin{figure}[htbp]
 	\begin{center}
 
-		\includegraphics[width=8cm]{vel_ang}
-		\caption{derivada de la posicion (en verde). Ni idea (en rojo). Tampoco (en azul)}
+		\includegraphics[width=10cm]{vel_ang}
+		\caption{Derivada de la posicion (en verde). Ni idea (en rojo). Tampoco (en azul)}
 		\label{velAng}
 	\end{center}
 \end{figure}
@@ -138,43 +140,133 @@ Cuando se considera el motor en régimen permanente la función de transferencia
 A partir de la zona en la que se considera terminado el régimen transitorio se obtiene el valor de la velocidad nominal del motor para cada valor de tension.
 Usando estos valores junto el valor del polo obtenido anteriormente se puede aplicar la ecuacion \ref{eq:trans0} pueden obtener los valores de ganancia $K$ indicados en la
 figura \ref{valoresK}.
-Usando estos valores se obtiene la ganancia media $KM=1372.1456$ y las tensiones de entrada equivalente de la tabla \ref{veq1}.
+Usando estos valores se obtiene la ganancia media $KM=1372.1456$ y las tensiones de entrada equivalente de la tabla \ref{veq}.
 
-0,781896438870351	1,80423834427078	2,84086598677024	3,86129834138256	4,88237678460740	5,92278045610892	6,95228676634595	7,98034296658600	9,02004311937610	10,0379341921125	11,0426306996288	12,1643553911594
+\begin{figure}[htbp]
+	\begin{center}
+		\includegraphics[width=10cm]{polos}
+		\includegraphics[width=10cm]{varianza}
+	\end{center}
+	\caption{}
+	\label{polos}
+\end{figure}
 
-\subsection{Cuarta Fase: Identificación de la función no lineal del modelo del motor mediante
-la técnica de interpolación polinómica}
+\begin{figure}[htbp]
+	\begin{center}
+		\includegraphics[width=10cm]{valores_fase_3}
+		\caption{Valores obtenidos en la fase 3}
+		\label{valoresK}
+	\end{center}
+\end{figure}
 
-Se pueden comparar con los valores de tensión introducidos con las siguientes figuras:
-INSERTAR FIGURAS INSERTAR VALORES.
+\begin{table}[hbt]
+	\begin{center}
+		\begin{tabular}{c c}
+			Tensión de entrada($V$) & Tensión equivalente($V$) \\
+			\hline
+			1 & 0,7818964 \\
+			2 & 1,8042383 \\
+			3 & 2,8408659 \\
+			4 & 3,8612983 \\
+			5 & 4,8823767 \\
+			6 & 5,9227804 \\
+			7 & 6,9522867 \\
+			8 & 7,9803429 \\
+			9 & 9,0200431 \\
+			10 & 10,037934 \\
+			11 & 11,042630 \\
+			12 & 12,164355 \\
+			\end{tabular}
+	\end{center}
+	\caption{Valores de tension equivalentes calculados}
+	\label{veq}
+\end{table}
 
-También se ha calculado el error cuadrático que es J=0.0918. De las figuras se pueden obtener los valores del polinomio impar de grado 12, que son
-los siguientes:
-INSERTAR VALORES DEL POLINOMIO
-
+También se ha calculado el error cuadrático que es $J=0.0918$. De las figuras se pueden obtener los valores del polinomio impar de grado 12 que están representados en la figura \ref{polinomioA}
 También se calcula el polinomio inverso, que serán necesario para el siguiente apartado.
 
-\subsection{Función de transferencia}
-Sabiendo forma de la función de transferencia, y viendo los datos que se han obtenido, es la siguiente:
+\begin{figure}[htbp]
+	\begin{center}
+		\includegraphics[width=8cm]{curva_polinomica}
+		\caption{}
+		\label{polinomioA}
+	\end{center}
+\end{figure}
 
 \begin{equation}
-G(s) = \frac{KM}{s+pM} = \frac{1372.1456}{s+29.9483}
+a =
+\left( \begin{array}{c}
+a_1 \\
+a_3 \\
+\vdots \\
+a_23
+\end{array} \right)
+=
+\left( \begin{array}{c}
+0,701961209032454  \\
+0,0945362588079597  \\
+-0,0160613536061577  \\
+0,00154761933773519  \\
+-9,05842600897708 \times 10^{-5}  \\
+3,36970267186654\times 10^{-6}  \\
+-8,16569483050979\times 10^{-8}  \\
+1,29780689392616\times 10^{-9}  \\
+-1,33533762669408\times 10^{-11}  \\
+8,52938300661312\times 10^{-14}  \\
+-3,06295258196779\times 10^{-16}  \\
+4,71095903040637\times 10^{-19}
+\end{array} \right)
+\end{equation}
+
+Finalmente, susstituyendo los valores obtenidos anteriormente en la ecuacion \ref{trans} se obtiene:
+
+\begin{equation}
+	\label{eq:transVal}
+	\dot{\theta}_m (s) = \frac{1372.1456}{s+29.9483}
 \end{equation}
 
 
 \subsection{Problemas encontrados durante la obtención de las gráficas de esta sección}
-Como el profesor podrá recordar, nuestro grupo tubo ciertos problemas a la hora de obtener las gráficas presentadas en esta sección, concretamente las gráficas de polos y de varianza,
+Como el profesor podrá recordar, nuestro grupo tuvo ciertos problemas a la hora de obtener las gráficas presentadas en esta sección, concretamente las gráficas de polos y de varianza,
 ya que estas aparecían con intervalos en blanco sin saber muy bien la razón. Tras indagar sobre el tema, se encontró cual era la causa
-del problema y se solucionó. Parece ser que la interrupción que se había activado para el control del tiempo por milisegundos a veces
-no era lo bastante rápida ya que la interrupción encargada de tomar datos en los flancos de subida o bajada de los pines de los que obtenemos
-los datos de movimiento del motor parecía ser más rápida, por lo que tomaba varios datos en el mismo instante de tiempo. Para solucionar este
-contratiempo, se ha realizado una media de los tiempos al mismo tiempo que se realiza la media de los datos de tensión. Esta modificación del
-software realizado en matlab se encuentra en el repositorio GitHub.
+del problema y se solucionó. Parece ser que la interrupcción que se había activado para el control del tiempo por milisegundos a veces
+no era lo bastante rápida ya que la interrupcción encargada de tomar datos en los flancos de subida o bajada de los pines de los que obtenemos
+los datos de movimiento del motor parecía ser más rápida, por lo que tomaba dos datos con el mismo tiempo, por lo que al calcular la velocidad se obtenian infinitos.
+Para solucionar este contratiempo, se ha realizado una media de los tiempos junto con la media de los datos de tensión.
+Esta modificación del software realizado en matlab se encuentra en el repositorio GitHub.
 
+También tuvimos ciertos problemas con la activación de las interrupcciones generadas por \emph{timers}, ya que la nomenclatura usada en el \emph{framework} no es nada clara.
+Al parecer, en el driver que controla los timers se considera que existen únicamente 3 (TC0, TC1 y TC2) con 3 canales cada uno que se seleccionan con un parámetro en sus funciones,
+sin embargo, tanto el el driver del PCM como en controlador de las interrupciones (NVIC), existen 9 timers (TC0, TC1, ..., TC8) complétamente independientes. Por lo que era necesario
+usar distintas referencias según el driver con el que estuvieras interactuando.
 
 \section{Análisis, diseño e implementación de un controlador P para un control de posición angular}
 
---sección vacía
+\begin{equation}
+b =
+\left( \begin{array}{c}
+b_1 \\
+b_2 \\
+\vdots \\
+b_12
+\end{array} \right)
+=
+\left( \begin{array}{c}
+1,35449294076669 \\
+-0,139208967806144 \\
+0,0272672229765444 \\
+-0,00288932286118707 \\
+0,000180442706051049 \\
+-7,01927496494115\times 10^{-6} \\
+1,75435087512626\times 10^{-7} \\
+-2,84770776397949\times 10^{-9} \\
+2,97085236393373\times 10^{-11} \\
+-1,91325972520681\times 10^{-13} \\
+6,89609494470547\times 10^{-16} \\
+-1,06057220426799\times 10^{-18}
+
+\end{array} \right)
+\end{equation}
 
 \section{Conclusiones}
 
