@@ -108,7 +108,7 @@ de Matlab proporcionados usan en sus cálculos para modelar el motor.
 
 \subsection{Obtención de la función de transferencia}
 El objetivo de esta sección es obtener la función de transferencia del motor a partir de los datos obtenidos en la sección \ref{sec:exp}.
-Para ello se usa el modelo simplificado de está despreciando los polos no dominantes:
+Para ello se usa el modelo simplificado de esta despreciando los polos no dominantes:
 
 \begin{equation}
 	\label{eq:trans}
@@ -123,7 +123,7 @@ Estos se calculan derivando los datos obtenidos sobre la posición del motor. El
 	\begin{center}
 
 		\includegraphics[width=10cm]{vel_ang}
-		\caption{Derivada de la posicion (en verde). Ni idea (en rojo). Tampoco (en azul)}
+		\caption{Derivada de la posicion (en verde). Respuesta de la parte lineal del motor (en azul). Respuesta con $p$ y $K$ calculados (en rojo)}
 		\label{velAng}
 	\end{center}
 \end{figure}
@@ -140,9 +140,9 @@ Cuando se considera el motor en régimen permanente la función de transferencia
 \end{equation}
 
 A partir de la zona en la que se considera terminado el régimen transitorio se obtiene el valor de la velocidad nominal del motor para cada valor de tensión.
-Usando estos valores junto el valor del polo obtenido anteriormente se puede aplicar la ecuación \ref{eq:trans0} pueden obtener los valores de ganancia $K$ indicados en la
+Usando estos valores junto con el valor del polo obtenido anteriormente se puede aplicar la ecuación \ref{eq:trans0} para obtener los valores de ganancia $K$ indicados en la
 figura \ref{valoresK}.
-Usando estos valores se obtiene la ganancia media $KM=1372.1456$ y las tensiones de entrada equivalente de la tabla \ref{veq}.
+Con ellos se obtiene la ganancia media $KM=1372.1456$ y las tensiones de entrada equivalente de la tabla \ref{veq}.
 
 \begin{figure}[htbp]
 	\begin{center}
@@ -185,7 +185,7 @@ Usando estos valores se obtiene la ganancia media $KM=1372.1456$ y las tensiones
 \end{table}
 
 También se ha calculado el error cuadrático que es $J=0.0918$. De las figuras se pueden obtener los valores del polinomio impar de grado 12 que están representados en la figura \ref{polinomioA}
-También se calcula el polinomio inverso, que serán necesario para el siguiente apartado.
+También se calcula el polinomio inverso, que será necesario para el siguiente apartado.
 
 \begin{figure}[htbp]
 	\begin{center}
@@ -231,16 +231,16 @@ Finalmente, sustituyendo los valores obtenidos anteriormente en la ecuación \re
 \subsection{Problemas encontrados durante la obtención de las gráficas de esta sección}
 Como el profesor podrá recordar, nuestro grupo tuvo ciertos problemas a la hora de obtener las gráficas presentadas en esta sección, concretamente las gráficas de polos y de varianza,
 ya que estas aparecían con intervalos en blanco sin saber muy bien la razón. Tras indagar sobre el tema, se encontró cual era la causa
-del problema y se solucionó. Parece ser que la interrupción que se había activado para el control del tiempo por milisegundos a veces
-no era lo bastante rápida ya que la interrupción encargada de tomar datos en los flancos de subida o bajada de los pines de los que obtenemos
-los datos de movimiento del motor parecía ser más rápida, por lo que tomaba dos datos con el mismo tiempo, por lo que al calcular la velocidad se obtenían infinitos.
-Para solucionar este contratiempo, se ha realizado una media de los tiempos junto con la media de los datos de tensión.
-Esta modificación del software realizado en matlab se encuentra en el repositorio GitHub.
+del problema y se solucionó: Parece ser que la interrupción que se había activado para el control del tiempo a veces se ejecutaba despues que
+la interrupción encargada de guardar el valor de la posición cada milisegundo, por lo que se tomaban dos datos con la misma marca temporal,
+y al calcular la velocidad se obtenían valores infinitos.
+Para solucionar este contratiempo, se ha realizado una media de los tiempos junto con la media de los datos de posición.
+Esta modificación del software realizado en Matlab se encuentra en el repositorio GitHub \cite{git}.
 
 También tuvimos ciertos problemas con la activación de las interrupciones generadas por \emph{timers} comentadas en la sección \ref{int}, ya que la nomenclatura usada en el \emph{framework} no es nada clara.
-Al parecer, en el driver que controla los timers se considera que existen únicamente 3 (TC0, TC1 y TC2) con 3 canales cada uno que se seleccionan con un parámetro en sus funciones,
+Al parecer, en el driver que controla los \emph{timers} se considera que existen únicamente 3 (TC0, TC1 y TC2) con 3 canales cada uno que se seleccionan con un parámetro en sus funciones,
 sin embargo, tanto el el driver del PCM como en controlador de las interrupciones (NVIC), existen 9 timers (TC0, TC1, ..., TC8) completamente independientes. Por lo que era necesario
-usar distintas referencias según el driver con el que estuvieras interactuando. Todo esto fue encontrado en el apartado 7.1 del datasheet del microprocesador \cite{SAM3X/A}
+usar distintas referencias según el driver con el que estuvieras interactuando. Todo esto fue encontrado en el apartado 7.1 del datasheet del microprocesador \cite{SAM3X/A}.
 
 \section{Análisis, diseño e implementación de un controlador P para un control de posición angular \label{sec:control}}
 
@@ -290,7 +290,7 @@ Dado que estamos trabajando con un microprocesador de baja potencia no se ha imp
 en Matlab de la que el controlador obtiene los valores oportunos.
 
 Debido a que la última parte de la función era muy irregular, se ha decidido linealizar los valores a partir del cual estos cambiaban de forma demasiado brusca. Para conseguir los valores
-que se utilizan en el código se creado un script en matlab. Se vuelve a remitir al repositorio de GitHub \cite{git} donde se encuentra dicho código.
+que se utilizan en el código se ha creado un script en Matlab. Se vuelve a remitir al repositorio de GitHub \cite{git} donde se encuentra dicho código.
 
 \section{Conclusiones}
 En este trabajo se ha modelado un motor de corriente continua con el uso de varios recursos que se nos han proporcionado, y con el seguimiento de la documentación de la asignatura. Aquí se han presentado los
