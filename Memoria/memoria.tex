@@ -44,18 +44,20 @@ En esta sección se pretende explicar el procedimiento seguido para obtener la s
 
 El microprocesador cuenta con ocho periféricos \emph{PWM}, cuya única función es generar señales de este tipo. Sin embargo,
 las salidas de estos periféricos son fijas y además no coinciden con los pines que se necesitan para controlar el puente en H, 4 y 5, en la placa del Arduino,
-lo cual nos obligaría a utilizar un cable adicional para poder usar este periférico.
+lo cual nos obligaría a utilizar un cable adicional para poder usar este periférico. Esta información se ha encontrado en el apartado 38 del datasheet \cite{SAM3X/A}.
 
 La placa también cuenta con timers los cuales pueden trabajar en modo \emph{waveform}.
 Este modo permite generar una señal de diferentes características.
 Configurando estos periféricos correctamente se puede generar una señal \emph{PWM} justo en el pin donde se conecta una de las entradas del puente en H: el pin 5.
-Para generar esta señal se utilizó el canal 0 del \emph{timer} 2 (\texttt{TIOA6}), que coincide con la entrada \texttt{IN\_2} del puente en H.
+Para generar esta señal se utilizó el canal 0 del \emph{timer} 2 (\texttt{TIOA6}), que coincide con la entrada \texttt{IN\_2} del puente en H. Para saber cómo configurar esto
+se ha seguido la información hallada en el apartado 36 del datasheet \cite{SAM3X/A}.
 
 \subsubsection{Quadrature decoder}
 El \textbf{SAM3XE8} contiene un decodificador de las señales del encoder del motor en hardware,
 que permite controlar su posición y/o su velocidad sin ningún software adicional, usando los canales 0, 1 y 2 del \emph{timer} 0 (\texttt{TC0}) para este propósito.
 Sin embargo, no es fácil de integrar en este proyecto, ya que la entrada de \emph{Enable} del canal 1 del puente H, coincide con una de las entradas del decodificador (\emph{TIOA0}).
-Por lo que habría que modificar la \emph{shield} para dejar las entradas \texttt{TIOA0} y \texttt{TIOB0} libres.
+Por lo que habría que modificar la \emph{shield} para dejar las entradas \texttt{TIOA0} y \texttt{TIOB0} libres. La información sobre \emph{Quadrature decoder} se encuentra en el apartado
+36.6.14 del datasheet \cite{SAM3X/A}.
 
 Por lo tanto la lectura de la posición del motor se realiza mediante interrupciones y rutinas software.
 
@@ -66,7 +68,7 @@ Se ha utilizado también otra interrupción periódica a un milisegundo usando e
 Por último también se ha activado una interrupción por flanco de subida o bajada en los pines de entrada a los que está conectado el encoder para realizar la decodificación de la posición.
 
 \subsection{Software \label{sec:software}}
-El software utilizado se ha desarrollado sobre el \emph{framework} que Atmel proporciona para sus dispositivos: \textbf{Atmel Software Framework}.
+El software utilizado se ha desarrollado sobre el \emph{framework} \cite{framework} que Atmel proporciona para sus dispositivos: \textbf{Atmel Software Framework}.
 Todo el código se encuentra en un repositorio de GitHub \cite{git}.
 
 Del software cabe destacar que se ha intentado realizar la mayoría de las tareas utilizando los periféricos hardware. Por lo tanto,
@@ -238,7 +240,7 @@ Esta modificación del software realizado en matlab se encuentra en el repositor
 También tuvimos ciertos problemas con la activación de las interrupciones generadas por \emph{timers} comentadas en la sección \ref{int}, ya que la nomenclatura usada en el \emph{framework} no es nada clara.
 Al parecer, en el driver que controla los timers se considera que existen únicamente 3 (TC0, TC1 y TC2) con 3 canales cada uno que se seleccionan con un parámetro en sus funciones,
 sin embargo, tanto el el driver del PCM como en controlador de las interrupciones (NVIC), existen 9 timers (TC0, TC1, ..., TC8) completamente independientes. Por lo que era necesario
-usar distintas referencias según el driver con el que estuvieras interactuando.
+usar distintas referencias según el driver con el que estuvieras interactuando. Todo esto fue encontrado en el apartado 7.1 del datasheet del microprocesador \cite{SAM3X/A}
 
 \section{Análisis, diseño e implementación de un controlador P para un control de posición angular \label{control}}
 
@@ -287,6 +289,9 @@ b_12
 Dado que estamos trabajando con un microprocesador de baja potencia no se ha implementado la función matemática en software, si no que se ha usado una \emph{lookup table} generada
 en Matlab de la que el controlador obtiene los valores oportunos.
 
+Debido a que la última parte de la función era muy irregular, se ha decidido linealizar los valores a partir del cual estos cambiaban de forma demasiado brusca. Para conseguir los valores
+que se utilizan en el código se creado un script en matlab. Se vuelve a remitir al repositorio de GitHub \cite{git} donde se encuentra dicho código.
+
 \section{Conclusiones}
 En este trabajo se ha modelado un motor de corriente continua con el uso de varios recursos que se nos han proporcionado, y con el seguimiento de la documentación de la asignatura. Aquí se han presentado los
 resultados de este modelado, que en principio consideramos satisfactorios, esperando haber cumplido los objetivos del mismo.
@@ -299,6 +304,8 @@ este trabajo.
 \begin{thebibliography}{9}
 \bibitem{git} \href{https://github.com/jjalberca/reallabo2018}{Repositorio del proyecto alojado en GitHub}
 \bibitem{modelado} Félix Monasterio-Huelin y Álvaro Gutiérrez: \href{http://robolabo.etsit.upm.es/asignaturas/seco/apuntes/modelado.pdf}{Modelado de un motor DC}
+\bibitem{SAM3X/A} Atmel Corporation \href{http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-11057-32-bit-Cortex-M3-Microcontroller-SAM3X-SAM3A_Datasheet.pdf}{Datasheet SAM3X / SAM3A Series}
+\bibitem{framework} Atmel Corporation \href{http://asf.atmel.com/docs/latest/search.html?device=sam3x}{Atmel Software Framework}
 \end{thebibliography}
 
 
