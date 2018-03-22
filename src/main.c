@@ -15,7 +15,6 @@
 #define V_REF 12
 /***************/
 
-#define PCONTROL_P 1;
 
 static void toggle_pin(void);
 static void save_pos(void);
@@ -193,6 +192,7 @@ static void manual_speed(void){
 		printf("PWM: %d\n\r", val);
 		motor_set(val);
 	}
+	motor_set(0);
 
 }
 
@@ -211,6 +211,7 @@ static void set_position(void){
 		pcontrol_set(val);
 	}
 	pcontrol_en = PCONTROL_DIS;
+	motor_set(0);
 }
 
 static void set_position_move(void){
@@ -229,4 +230,5 @@ static void set_position_move(void){
 		pcontrol_speed = val;
 	}
 	pcontrol_en = DISABLE;
+	motor_set(0);
 }

@@ -2,7 +2,7 @@
 #define POSITION_CONTOL_H
 
 
-#define PCONTROL_P 1;
+#define PCONTROL_P 10;
 
 int pcontrol_fire(int actual);
 void pcontrol_set(int sp);
